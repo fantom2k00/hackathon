@@ -32,17 +32,22 @@
             $(document).ready(function() {
                 var socket = io();
                 socket.on('trend response', function(msg) {
-                    $('#topic').append('<h1>' + msg.data + '</h1>');
+                    $('#topic').append('<h1>' + msg + '</h1>');
+                    socket.emit('scholar', {'data': msg});
                 });
                 socket.on('scholar response', function(msg) {
-                    $('#title').append('<h2>' + msg.data + '</h2>');
+                    $('#title').append('<h2>' + msg.title + '</h2>');
+                    $('#author').append('<h3>' + msg.author + '</h3>');
+                    $('#link').append('<a href=' + msg.link + '>' + msg.link + '</a>');
+                    socket.emit('gpt', msg);
                 });
                 socket.on('gpt response', function(msg) {
-                    $('#article').append('<p>' + msg.data + '</p>');
+                    $('#article').append('<p>' + msg.article + '</p>');
+                    socket.emit('firebase', msg);
                 });
-                socket.on('link response', function(msg) {
-                    $('#link').append('<a href=' + msg.data + '>' + msg.data + '</a>');
+                socket.on('firebase response', function(msg) {
                     $('.loader').hide();
+                    socket.emit('disconnect');
                 });
             });
         </script>
@@ -50,8 +55,9 @@
     <body>
         <div id="topic"></div>
         <div id="title"></div>
-        <div id="article"></div>
+        <div id="author"></div>
         <div id="link"></div>
+        <div id="article"></div>
         <div class="loader"></div>
     </body>
 </html>

@@ -42,35 +42,47 @@ def hello_world():
 
 @socketio.on('connect')
 def test_connect():
+    print("CONNECTING /////////////////////////")
     topics = getTrendingTopics("Technology")
     topic_id = random.randint(0, len(topics)-1)
     print(topics)
-    
-    authors, titles, links = searchGoogleScholar(topics[topic_id])
+    emit('trend response', topics[topic_id])
+
+@socketio.on('scholar')
+def test_scholar(topic):
+    print("SCHOLAR /////////////////////////")
+    authors, titles, links = searchGoogleScholar(topic)
     article_id = random.randint(0, len(titles)-1)
     print(authors[article_id])
     print(titles[article_id])
     print(links[article_id])    
-    article = generateArticle(links[article_id])
+    emit('scholar response', {'topic': topic, 'author': authors[article_id], 'title': titles[article_id], 'link': links[article_id]})
   
+@socketio.on('gpt')
+def test_gpt(data): 
+    print("GPT /////////////////////////") 
+    article = generateArticle(data["link"])
+    data["article"] = article
+    emit('gpt response', data)
+    
+@socketio.on('firebase')
+def test_firebase(data):
+    print("FIREBASE /////////////////////////")
     doc_ref = firestore_client.collection('articles').document()
     doc_ref.set({
         'dateArticle': '2020',
-        'author': authors[article_id],
+        'author': data["author"],
         'date': time.time(), 
-        'summary': article,
-        'source': links[article_id],
-        'title': titles[article_id],
-        'topic': topics[topic_id]
+        'summary': data["article"],
+        'source': data["link"],
+        'title': data["title"],
+        'topic': data["topic"]
     })
+    emit('firebase response')
     
-    emit('trend response', {'data': topics[topic_id]})
-    emit('scholar response', {'data': titles[article_id]})
-    emit('gpt response', {'data': article})
-    emit('link response', {'data': links[article_id]})
-
 @socketio.on('disconnect')
 def test_disconnect():
+    print("DICONNECT /////////////////////////")
     print('Client disconnected')
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import openai
 
 def generateArticle(link):
-    openai.api_key = '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'
+    openai.api_key = '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'
     model_engine = 'gpt-3.5-turbo'
     response = openai.ChatCompletion.create(
     model='gpt-3.5-turbo',
