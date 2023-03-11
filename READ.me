@@ -1,0 +1,8 @@
+PYTHON BACKEND
+- The backend uses APIs from Google Scholar, Google Trends, SarpAPI, ChatGPT and Firebase.
+- Its purpose is to enable AI to write articles about trending topics as an attempt to overcome ChatGPT's database limit until 2021 while providing reliable data.
+- The program is fully functional, however, still very unstable due to the API calls being limited and large latency between calls.
+- The backbone of the server is a Flask application that is currently working locally on a loopback address.
+- After Google and ChatGPT tools finish writing the article, they send it to a NoSQL database held on the Firebase server.
+- Firebase is used later to display the computer generated articles to a mobile application.
+- To enhance performance, the server uses web sockets which allow asynchronous API calls.
