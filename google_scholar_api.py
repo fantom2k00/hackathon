@@ -1,25 +1,23 @@
-import requests
-from bs4 import BeautifulSoup
+from serpapi import GoogleSearch
 
 def searchGoogleScholar(topic):
-    headers = {'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'}
-    topic = topic.replace(" ", "+")
-    url = 'https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=' + topic + '+&btnG=&oq=ob'
-    response=requests.get(url, headers=headers)
+    params = {
+        "engine": "google_scholar",
+        "q": topic,
+        "api_key": "f5cdf7322844984e5e32f69e32e7b20c94ca65d6471c8a9390262ee28e22ff44"
+    }
 
-    if response.status_code != 200:
-        print('Status code:', response.status_code)
-        raise Exception('Failed to fetch web page ')
-    doc = BeautifulSoup(response.text,'html.parser')
-  
-    paper_names = []
-    paper_tag = doc.select('[data-lid]')
-    for tag in paper_tag:
-        paper_names.append(tag.select('h3')[0].get_text())
-        
+    search = GoogleSearch(params)
+    results = search.get_dict()
+    organic_results = results["organic_results"]
+    
+    titles = []
     links = []
-    link_tag = doc.find_all('h3',{"class" : "gs_rt"})
-    for i in range(len(link_tag)) :
-        links.append(link_tag[i].a['href']) 
-
-    return paper_names, links
+    for result in organic_results:
+        titles.append(result["title"])
+        links.append(result["link"])
+    
+    print(titles)
+    print(links)
+    
+    return titles, links

@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = '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'
+openai.api_key = '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'
 model_engine = 'gpt-3.5-turbo'
 
 def generateArticle(link):

@@ -18,10 +18,16 @@ def hello_world():
 @socketio.on('connect')
 def test_connect():
     topics = getTrendingTopics("Technology")
-    topic_id = random.randint(0, len(topics))
+    topic_id = random.randint(0, len(topics)-1)
+    print(topics)
+    
     titles, links = searchGoogleScholar(topics[topic_id])
-    article_id = random.randint(0, len(titles))
+    print(titles)
+    print(links)
+    
+    article_id = random.randint(0, len(titles)-1)
     article = generateArticle(links[article_id])
+    
     emit('trend response', {'data': topics[topic_id]})
     emit('scholar response', {'data': titles[article_id]})
     emit('gpt response', {'data': article})
