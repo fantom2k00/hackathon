@@ -33,7 +33,7 @@
                 var socket = io();
                 socket.on('trend response', function(msg) {
                     $('#topic').append('<h1>' + msg + '</h1>');
-                    socket.emit('scholar', {'data': msg});
+                    socket.emit('scholar', msg);
                 });
                 socket.on('scholar response', function(msg) {
                     $('#title').append('<h2>' + msg.title + '</h2>');
@@ -46,7 +46,8 @@
                     socket.emit('firebase', msg);
                 });
                 socket.on('firebase response', function(msg) {
-                    $('.loader').hide();
+                    window.setTimeout( $('.loader').hide(), 35000 );
+                    location.reload();
                     socket.emit('disconnect');
                 });
             });

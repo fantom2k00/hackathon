@@ -63,6 +63,7 @@ def test_gpt(data):
     print("GPT /////////////////////////") 
     article = generateArticle(data["link"])
     data["article"] = article
+    print(data)
     emit('gpt response', data)
     
 @socketio.on('firebase')
