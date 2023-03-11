@@ -30,20 +30,26 @@ cred = credentials.Certificate(config)
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://explosivepopcorn-2428d-default-rtdb.europe-west1.firebasedatabase.app/'})
 firestore_client = firestore.client()
 
-@app.route("/read_data")
-def get_from_db():
-    ref = firestore_client.collection("articles").document("QF1e4Ypo0DOOtmFdkoZg")
-    print(ref.get().to_dict())
-    return "<p>ref<p>"
+ref = firestore_client.collection("categories")
 
 @app.route("/")
 def hello_world():
     return render_template("index.html")
 
 @socketio.on('connect')
-def test_connect():
+def test_connect(_):
     print("CONNECTING /////////////////////////")
-    topics = getTrendingTopics("Technology")
+    trend = ''
+    for r in ref.get():
+        if r.to_dict()['selected']:
+            trend = str(r.to_dict()['title'])
+
+    if not trend:
+        trend = 'Technology'
+            
+    print(trend)
+
+    topics = getTrendingTopics(trend)
     topic_id = random.randint(0, len(topics)-1)
     print(topics)
     emit('trend response', topics[topic_id])
@@ -51,7 +57,7 @@ def test_connect():
 @socketio.on('scholar')
 def test_scholar(topic):
     print("SCHOLAR /////////////////////////")
-    authors, titles, links = searchGoogleScholar(topic)
+    authors, titles, links = searchGoogleScholar(list(topic))
     article_id = random.randint(0, len(titles)-1)
     print(authors[article_id])
     print(titles[article_id])
