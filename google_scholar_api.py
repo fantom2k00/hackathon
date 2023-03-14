@@ -4,7 +4,7 @@ def searchGoogleScholar(topic):
     params = {
         "engine": "google_scholar",
         "q": topic,
-        "api_key": "f5cdf7322844984e5e32f69e32e7b20c94ca65d6471c8a9390262ee28e22ff44",
+        "api_key": "scholar_key",
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-US,en;q=0.8',
